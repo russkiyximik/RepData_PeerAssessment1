@@ -1,21 +1,7 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
-
-## Loading and preprocessing the data
-
-```{r, echo=TRUE, cache=TRUE}
 library(tidyverse)
 unzip('activity.zip')
 activity <- read_csv('activity.csv')
-```
 
-## What is mean total number of steps taken per day?
-
-```{r, echo=TRUE}
 filled <- activity[!is.na(activity$steps),]
 stepsperday <- aggregate(steps ~ date, data=filled, sum)
 g1 <- ggplot(data=stepsperday, aes(x=steps))
@@ -23,19 +9,10 @@ g1 + geom_histogram()
 mean(stepsperday$steps)
 median(stepsperday$steps)
 
-```
-
-## What is the average daily activity pattern?
-
-```{r, echo=TRUE}
 stepsperint <- aggregate(steps ~ interval, data=filled, mean)
 plot(stepsperint$interval, stepsperint$steps, type='l')
 stepsperint$interval[which.max(stepsperint$steps)]
-```
 
-## Imputing missing values
-
-```{r, echo=TRUE}
 sum(is.na(activity$steps))
 # We will replace all NA's with the mean value for that interval
 complete <- activity %>% 
@@ -47,14 +24,10 @@ g2 <- ggplot(data=completestepsperday, aes(x=steps))
 g2 + geom_histogram()
 mean(completestepsperday$steps)
 median(completestepsperday$steps)
-```
 
-## Are there differences in activity patterns between weekdays and weekends?
-
-```{r, echo=TRUE}
 byday <- complete %>% mutate(day=ifelse(weekdays(date) %in% 
 	c('Saturday', 'Sunday'), 'weekend', 'weekday'))
 completestepsperintday <- aggregate(steps ~ interval + day, data=byday, mean)
 g3 <- ggplot(data=completestepsperintday, aes(interval, steps))
 g3 + facet_wrap(.~day, nrow=2) + geom_line()
-```
+		    
